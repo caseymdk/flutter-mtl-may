@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+message DroneStatus {
+    enum Status {
+        UNKNOWN = 0;
+        ALL_OK = 1;
+        MINOR_WARNING = 2;
+        WARNING = 3;
+        ERROR = 4;
+        CRITICAL_ERROR = 5;
+        DEAD = 6;
+    }
+
+    message ProximityStatus {
+        bool left = 1;
+        bool right = 2;
+        bool front = 3;
+        bool back = 4;
+        bool top = 5;
+        bool bottom = 6;
+    }
+
+    Status general_status = 1;
+    int32 speed_kmh = 2;
+    int32 alt_above_ground = 3;
+    int32 alt_above_sea = 4;
+    bool suction_active = 5;
+    ProximityStatus proximity = 6;
+}
