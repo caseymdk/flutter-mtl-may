@@ -9,7 +9,7 @@ import base64
 def lambda_handler(event, context):
     drone_status = drone_status_pb2.DroneStatus()
 
-    if random.random() < 0.8:
+    if random.random() < 0.9:
         drone_status.general_status = drone_status_pb2.DroneStatus.ALL_OK
     else:
         drone_status.general_status = random.choice(list(drone_status_pb2.DroneStatus.Status.values()))

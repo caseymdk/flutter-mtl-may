@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:drone_app/drone_status.pb.dart';
@@ -21,10 +20,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Drone Control Interface\n(Friendly drone - Not the 🇺🇸 kind)',),
     );
   }
 }
@@ -96,11 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(widget.title, textAlign: TextAlign.center,),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          const Gap(32),
           _item('Status: ${_droneStatus.generalStatus}',
               color: _droneStatus.generalStatus == DroneStatus_Status.ALL_OK
                   ? Colors.green
@@ -115,7 +115,6 @@ class _MyHomePageState extends State<MyHomePage> {
           _item("Suction active: ${_droneStatus.suctionActive}",
               color: _droneStatus.suctionActive ? Colors.green : Colors.red),
           const Gap(50),
-          _item("Proximity Status:"),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -131,32 +130,37 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Wrap(
+                  child: Column(
                     children: [
-                      _item("Front: ${_droneStatus.proximity.front}",
-                          color: _droneStatus.proximity.front
-                              ? Colors.red
-                              : Colors.green),
-                      _item("Back: ${_droneStatus.proximity.back}",
-                          color: _droneStatus.proximity.back
-                              ? Colors.red
-                              : Colors.green),
-                      _item("Left: ${_droneStatus.proximity.left}",
-                          color: _droneStatus.proximity.left
-                              ? Colors.red
-                              : Colors.green),
-                      _item("Right: ${_droneStatus.proximity.right}",
-                          color: _droneStatus.proximity.right
-                              ? Colors.red
-                              : Colors.green),
-                      _item("Top: ${_droneStatus.proximity.top}",
-                          color: _droneStatus.proximity.top
-                              ? Colors.red
-                              : Colors.green),
-                      _item("Bottom: ${_droneStatus.proximity.bottom}",
-                          color: _droneStatus.proximity.bottom
-                              ? Colors.red
-                              : Colors.green)
+          _item("Proximity Status:", color: Colors.blue),
+                      Wrap(
+                        children: [
+                          _item("Front: ${_droneStatus.proximity.front}",
+                              color: _droneStatus.proximity.front
+                                  ? Colors.red
+                                  : Colors.green),
+                          _item("Back: ${_droneStatus.proximity.back}",
+                              color: _droneStatus.proximity.back
+                                  ? Colors.red
+                                  : Colors.green),
+                          _item("Left: ${_droneStatus.proximity.left}",
+                              color: _droneStatus.proximity.left
+                                  ? Colors.red
+                                  : Colors.green),
+                          _item("Right: ${_droneStatus.proximity.right}",
+                              color: _droneStatus.proximity.right
+                                  ? Colors.red
+                                  : Colors.green),
+                          _item("Top: ${_droneStatus.proximity.top}",
+                              color: _droneStatus.proximity.top
+                                  ? Colors.red
+                                  : Colors.green),
+                          _item("Bottom: ${_droneStatus.proximity.bottom}",
+                              color: _droneStatus.proximity.bottom
+                                  ? Colors.red
+                                  : Colors.green)
+                        ],
+                      ),
                     ],
                   )),
             ),

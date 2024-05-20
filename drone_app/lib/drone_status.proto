@@ -20,10 +20,12 @@ message DroneStatus {
         bool bottom = 6;
     }
 
-    Status general_status = 1;
+    Status general_status = 1; // TODO: Rename from this
+//  Status system_status = 1; // TODO: Rename to this
     int32 speed_kmh = 2;
     int32 alt_above_ground = 3;
-    int32 alt_above_sea = 4;
+    int32 alt_above_sea = 4;  // TODO: Remove
     bool suction_active = 5;
     ProximityStatus proximity = 6;
+//  bool i_am_falling_lol = 7; // TODO: Add
 }
