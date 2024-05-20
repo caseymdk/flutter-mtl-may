@@ -1,5 +1,7 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 import 'package:drone_app/drone_status.pb.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -38,26 +40,40 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var random = Random();
-    Timer? _timer;
 
-  DroneStatus droneStatus = DroneStatus();
+  DroneStatus _droneStatus = DroneStatus();
 
-    @override
+  @override
   void initState() {
     super.initState();
     _startTimer();
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      _updateDroneStatus();
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      fetchDroneStatus();
+//      _updateDroneStatus();
     });
+  }
+
+  Future<void> fetchDroneStatus() async {
+    final response = await http.get(Uri.parse(
+        'https://ilgfr7cwt5lpfl6oyf56whixee0xrmvx.lambda-url.ca-central-1.on.aws/'));
+    if (response.statusCode == 200) {
+      final bytes = response.bodyBytes;
+      final droneStatus = DroneStatus.fromBuffer(Uint8List.fromList(bytes));
+      setState(() {
+        _droneStatus = droneStatus;
+      });
+    } else {
+      throw Exception('Failed to load drone status');
+    }
   }
 
   void _updateDroneStatus() {
     int alt = random.nextInt(5) + 30;
     setState(() {
-      droneStatus = DroneStatus(
+      _droneStatus = DroneStatus(
         generalStatus: DroneStatus_Status.ALL_OK,
         speedKmh: random.nextInt(10) + 5,
         altAboveGround: alt,
@@ -85,49 +101,92 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-         _item(
-              'Speed: ${droneStatus.speedKmh} km/h'
+          _item('Status: ${_droneStatus.generalStatus}',
+              color: _droneStatus.generalStatus == DroneStatus_Status.ALL_OK
+                  ? Colors.green
+                  : Colors.red),
+          _item('Speed: ${_droneStatus.speedKmh} km/h'),
+          Row(
+            children: [
+              _item('Alt (AGL): ${_droneStatus.altAboveGround} m'),
+              _item('Alt (ASL): ${_droneStatus.altAboveSea} m'),
+            ],
+          ),
+          _item("Suction active: ${_droneStatus.suctionActive}",
+              color: _droneStatus.suctionActive ? Colors.green : Colors.red),
+          const Gap(50),
+          _item("Proximity Status:"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.grey,
+                  ),
+                  bottom: BorderSide(color: Colors.grey),
+                  left: BorderSide(color: Colors.grey),
+                  right: BorderSide(color: Colors.grey),
+                ),
+              ),
+              child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    children: [
+                      _item("Front: ${_droneStatus.proximity.front}",
+                          color: _droneStatus.proximity.front
+                              ? Colors.red
+                              : Colors.green),
+                      _item("Back: ${_droneStatus.proximity.back}",
+                          color: _droneStatus.proximity.back
+                              ? Colors.red
+                              : Colors.green),
+                      _item("Left: ${_droneStatus.proximity.left}",
+                          color: _droneStatus.proximity.left
+                              ? Colors.red
+                              : Colors.green),
+                      _item("Right: ${_droneStatus.proximity.right}",
+                          color: _droneStatus.proximity.right
+                              ? Colors.red
+                              : Colors.green),
+                      _item("Top: ${_droneStatus.proximity.top}",
+                          color: _droneStatus.proximity.top
+                              ? Colors.red
+                              : Colors.green),
+                      _item("Bottom: ${_droneStatus.proximity.bottom}",
+                          color: _droneStatus.proximity.bottom
+                              ? Colors.red
+                              : Colors.green)
+                    ],
+                  )),
             ),
-         Row(
-           children: [
-             _item(
-                  'Alt (AGL): ${droneStatus.altAboveGround} m'
-                ),
-             _item(
-                  'Alt (ASL): ${droneStatus.altAboveSea} m'
-                ),
-           ],
-         ),
-         _item("Suction active: ${droneStatus.suctionActive}", color: droneStatus.suctionActive ? Colors.green : Colors.red),
-         const Gap(24),
-         _item("Proximity Status:\n\n${droneStatus.proximity}")
+          ),
         ],
       ),
     );
   }
 
-Widget _item(String content, {Color color = Colors.grey})
-{
-double  width = color == Colors.grey ? 1 : 4;
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-      decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: color, width: width),
-                bottom: BorderSide(color: color, width: width),
-                left: BorderSide(color: color, width: width),
-                right: BorderSide(color: color, width: width),
-              ),
-            ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-                    content,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
+  Widget _item(String content, {Color color = Colors.grey}) {
+    double width = color == Colors.grey ? 1 : 4;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: color, width: width),
+            bottom: BorderSide(color: color, width: width),
+            left: BorderSide(color: color, width: width),
+            right: BorderSide(color: color, width: width),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            content,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
