@@ -2,3 +2,4 @@
 **/.DS_Store
 *.pb*.dart
 *_pb2.py
+**/*.pyi
