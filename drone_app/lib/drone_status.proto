@@ -20,6 +20,8 @@ message DroneStatus {
         bool bottom = 6;
     }
 
+//    reserved 4;
+
     Status general_status = 1; // TODO: Rename from this
 //  Status system_status = 1; // TODO: Rename to this
     int32 speed_kmh = 2;
