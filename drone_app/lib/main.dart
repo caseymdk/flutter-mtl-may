@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:drone_app/drone_status_class.dart';
 import 'package:http/http.dart' as http;
-import 'package:drone_app/drone_status.pb.dart';
+//import 'package:drone_app/drone_status.pb.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -57,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<void> fetchDroneStatus() async {
+/*   Future<void> fetchDroneStatus() async {
     final response =
         await http.get(Uri.parse('https://ilgfr7cwt5lpfl6oyf56whixee0xrmvx.lambda-url.ca-central-1.on.aws/'));
     if (response.statusCode == 200) {
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       throw Exception('Failed to load drone status');
     }
-  }
+  } */
 
   void _updateDroneStatus() {
     int alt = random.nextInt(5) + 30;
@@ -116,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           _item("Suction active: ${_droneStatus.suctionActive}",
-              color: _droneStatus.suctionActive ? Colors.green : Colors.red),
+              color: _droneStatus.suctionActive ?? false ? Colors.green : Colors.red),
           const Gap(50),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -138,18 +139,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       _item("Proximity Status:", color: Colors.blue),
                       Wrap(
                         children: [
-                          _item("Front: ${_droneStatus.proximity.front}",
-                              color: _droneStatus.proximity.front ? Colors.red : Colors.green),
-                          _item("Back: ${_droneStatus.proximity.back}",
-                              color: _droneStatus.proximity.back ? Colors.red : Colors.green),
-                          _item("Left: ${_droneStatus.proximity.left}",
-                              color: _droneStatus.proximity.left ? Colors.red : Colors.green),
-                          _item("Right: ${_droneStatus.proximity.right}",
-                              color: _droneStatus.proximity.right ? Colors.red : Colors.green),
-                          _item("Top: ${_droneStatus.proximity.top}",
-                              color: _droneStatus.proximity.top ? Colors.red : Colors.green),
-                          _item("Bottom: ${_droneStatus.proximity.bottom}",
-                              color: _droneStatus.proximity.bottom ? Colors.red : Colors.green)
+                          _item("Front: ${_droneStatus.proximity?.front}",
+                              color: _droneStatus.proximity?.front ?? false ? Colors.red : Colors.green),
+                          _item("Back: ${_droneStatus.proximity?.back}",
+                              color: _droneStatus.proximity?.back ?? false ? Colors.red : Colors.green),
+                          _item("Left: ${_droneStatus.proximity?.left}",
+                              color: _droneStatus.proximity?.left ?? false ? Colors.red : Colors.green),
+                          _item("Right: ${_droneStatus.proximity?.right}",
+                              color: _droneStatus.proximity?.right ?? false ? Colors.red : Colors.green),
+                          _item("Top: ${_droneStatus.proximity?.top}",
+                              color: _droneStatus.proximity?.top ?? false ? Colors.red : Colors.green),
+                          _item("Bottom: ${_droneStatus.proximity?.bottom}",
+                              color: _droneStatus.proximity?.bottom ?? false ? Colors.red : Colors.green)
                         ],
                       ),
                     ],
