@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 /*   Future<void> fetchDroneStatus() async {
     final response =
-        await http.get(Uri.parse('https://ilgfr7cwt5lpfl6oyf56whixee0xrmvx.lambda-url.ca-central-1.on.aws/'));
+        await http.get(Uri.parse('<LAMBDA_URL>'));
     if (response.statusCode == 200) {
       final bytes = response.bodyBytes;
       final droneStatus = DroneStatus.fromBuffer(Uint8List.fromList(bytes));
