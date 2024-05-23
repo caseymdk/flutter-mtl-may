@@ -36,27 +36,6 @@
   "ruff.format.args": [
     "--line-length=120"
   ],
-  "cSpell.words": [
-    "boto",
-    "cwhen",
-    "cwhenlist",
-    "fixnum",
-    "LTRB",
-    "Makena",
-    "nanos",
-    "onesignal",
-    "outerjoin",
-    "PBJW",
-    "Pinput",
-    "protobuf",
-    "RGBO",
-    "riverpod",
-    "rssi",
-    "screenutil",
-    "sendgrid",
-    "sqlalchemy",
-    "writeln"
-  ],
   "cSpell.ignorePaths": [
     "**/*.yaml",
     "**/*.g.dart",
